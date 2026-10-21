@@ -1,0 +1,11 @@
+{
+  "name": "all-your-base",
+  "version": "0.1.2",
+  "description": "Recover valuable donor capabilities and integrate them into your personal ecosystem.",
+  "author": {
+    "name": "One-Person Labs",
+    "url": "https://github.com/OnePersonLabs"
+  },
+  "repository": "https://github.com/OnePersonLabs/all-your-base-are-belong-to-us-plugin",
+  "license": "MIT"
+}

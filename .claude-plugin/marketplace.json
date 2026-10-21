@@ -1,0 +1,16 @@
+{
+  "name": "all-your-base",
+  "owner": {
+    "name": "One-Person Labs"
+  },
+  "metadata": {
+    "description": "All Your Base assimilation skill for Claude Code."
+  },
+  "plugins": [
+    {
+      "name": "all-your-base",
+      "source": "./plugins/all-your-base",
+      "description": "Recover valuable donor capabilities and integrate them into your personal ecosystem."
+    }
+  ]
+}

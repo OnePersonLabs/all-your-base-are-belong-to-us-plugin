@@ -1,12 +1,30 @@
 # All Your Base Are Belong To Us
 
-Assimilate technological distinctiveness into tools that belong to you.
+> Assimilate technological distinctiveness. Build collectives that belong to you.
 
-All Your Base Are Belong To Us provides an assimilation skill for Codex and Claude Code. It investigates donor systems,
-recovering the mechanisms that make them useful, and integrating those
-capabilities into your own architecture. Use it with repositories, plugins,
-skills, or other inspectable systems. Your request determines whether the work
-ends with investigation, design, or implementation.
+The more complicated plugins get, the more they bring their own rules about how
+you should work. Collect enough of them and your agent can end up with three
+different test-driven development skills, conflicting instructions, and no clear
+reason to choose one. Your tools start putting walls around you.
+
+All Your Base gives your agent one skill: **assimilate**. Point it at repositories,
+plugins, skills, or other systems with capabilities you want. It investigates how
+they work, recovers the ideas that make them useful, and integrates those
+capabilities into your system so the pieces work together.
+
+You can take a brilliant testing method without adopting its author's entire
+development religion. Reconcile those three competing TDD skills into one
+coherent approach. Pull a useful review technique out of a sprawling bundle and
+give it a clear job alongside the tools you already use. The agent does the hard
+middle work: understanding the concepts, resolving conflicts, redesigning the
+boundaries, and checking that the useful capabilities survived.
+
+Basically, you get to be the Borg. The collective belongs to you. It can grow into
+one tool or several, with boundaries chosen for what you need. It can even
+assimilate better ways of assimilating.
+
+Works with Codex and Claude Code. You choose whether a request ends with
+investigation, design, or implementation.
 
 ## Install in Claude Code
 

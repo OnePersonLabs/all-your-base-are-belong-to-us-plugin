@@ -8,13 +8,13 @@ decision. Keep source evidence retrievable without requiring a transcript.
 
 Use the repository's existing durable work area and follow its tracking and
 retention policy. If none exists, choose a workspace-local campaign directory
-such as `.borg/<campaign>/` and state its absolute path. Keep it outside installed
+such as `.all-your-base/<campaign>/` and state its absolute path. Keep it outside installed
 plugin/runtime directories and areas automatically cleaned between sessions.
 Reuse an existing campaign instead of creating competing records. Record
 cross-workspace paths explicitly.
 
 Before writing temporary campaign records in a Git checkout, ensure the directory
-is ignored. The skill's mission setup already requires `.borg/` coverage in each
+is ignored. The skill's mission setup already requires `.all-your-base/` coverage in each
 receiving repository's root `.gitignore`. If using another temporary work area,
 reuse an effective ignore rule or add a narrowly scoped directory rule to the
 repository's `.gitignore`. Verify with `git check-ignore` against a path inside
@@ -119,7 +119,7 @@ once these conditions hold:
    Verify those records are usable without links into the directory to be deleted.
 3. Inspect the contents and resolve the exact deletion target. It must stay within
    the selected campaign directory and contain only disposable campaign-owned
-   files. Preserve unrelated files and other campaigns; remove the parent `.borg/`
+   files. Preserve unrelated files and other campaigns; remove the parent `.all-your-base/`
    only if empty. Keep the ignore rule for future campaigns.
 
 If the user or repository requires retention, keep the completed campaign as an

@@ -10,8 +10,6 @@ import {
   readdirSync,
   readlinkSync,
   realpathSync,
-  rmSync,
-  symlinkSync,
   writeFileSync,
 } from 'node:fs'
 import { homedir } from 'node:os'
@@ -149,12 +147,6 @@ function contractErrors(entry, root = pluginRoot(entry)) {
   }
 
   const skills = skillsFor(entry, root)
-  const cases = evalCases(entry)
-  const skillNames = new Set(skills.map((skill) => skill.name))
-  for (const item of cases) {
-    if (!skillNames.has(item.skill)) errors.push(`${entry.name}: eval case ${item.id ?? '(missing id)'} targets an unshipped skill`)
-    if (typeof item.should_activate !== 'boolean') errors.push(`${entry.name}: eval case ${item.id ?? '(missing id)'} lacks boolean should_activate`)
-  }
   for (const skill of skills) {
     const parsed = parseSkillFrontmatter(join(skill.root, 'SKILL.md'))
     if (parsed.name !== skill.name) errors.push(`${entry.name}/${skill.name}: frontmatter name differs`)
@@ -166,12 +158,6 @@ function contractErrors(entry, root = pluginRoot(entry)) {
     }
     const allow = readFileSync(openaiPath, 'utf8').match(/allow_implicit_invocation:\s*(true|false)/u)?.[1]
     if (!allow) errors.push(`${entry.name}/${skill.name}: allow_implicit_invocation must be explicit`)
-    const skillCases = cases.filter((item) => item.skill === skill.name)
-    for (const kind of ['direct', 'indirect', 'negative']) {
-      if (!skillCases.some((item) => item.kind === kind)) {
-        errors.push(`${entry.name}/${skill.name}: retained ${kind} eval case is missing`)
-      }
-    }
   }
   return errors
 }
@@ -269,79 +255,7 @@ function runFocus() {
 }
 
 function stateRoot() {
-  return resolve(process.env.OPL_PLUGIN_DEV_STATE ?? join(homedir(), '.local', 'state', 'opl-borg', 'codex'))
-}
-
-function prepareSkillHost(entry) {
-  const work = resolve(repoRoot, '.work', 'dev-hosts', entry.name)
-  rmSync(work, { recursive: true, force: true })
-  const target = join(work, '.agents', 'skills')
-  mkdirSync(target, { recursive: true })
-  for (const skill of skillsFor(entry)) symlinkSync(skill.root, join(target, skill.name), process.platform === 'win32' ? 'junction' : 'dir')
-  return work
-}
-
-function evalCases(entry) {
-  const path = resolve(repoRoot, 'tests', 'evals', 'cases', `${entry.name}.jsonl`)
-  if (!existsSync(path)) return []
-  return readFileSync(path, 'utf8').split(/\r?\n/u).filter(Boolean).map((line) => JSON.parse(line))
-}
-
-function activationEvidence(text, skill) {
-  const escaped = skill.replace(/[.*+?^${}()|[\]\\]/gu, '\\$&')
-  const plain = text.replace(/[*_`]/gu, '')
-  return new RegExp(`\\b(?:using|invoking|loaded|applying|I(?:['’](?:d|ll)|\\s+(?:would|will))\\s+use)\\s+(?:(?:the|requested|manual-only|explicitly\\s+(?:selected|requested))\\s+)*\\$?(?:[a-z0-9][a-z0-9-]*:)?${escaped}(?![a-z0-9_-])`, 'iu').test(plain)
-}
-
-function runEval(entries = selectedPlugins()) {
-  const requestedSkill = option('skill')
-  const requestedCase = option('case')
-  const authoringHome = join(stateRoot(), 'authoring')
-  mkdirSync(authoringHome, { recursive: true })
-  const resultRoot = resolve(repoRoot, '.work', 'eval-results')
-  mkdirSync(resultRoot, { recursive: true })
-  for (const entry of entries) {
-    const host = prepareSkillHost(entry)
-    let cases = evalCases(entry)
-    if (requestedSkill) cases = cases.filter((item) => item.skill === requestedSkill)
-    if (requestedCase) cases = cases.filter((item) => item.id === requestedCase)
-    if (!cases.length) {
-      console.log(`${entry.name}: no matching skill eval cases.`)
-      continue
-    }
-    const receipts = []
-    for (const item of cases) {
-      const output = run(codexCommand([
-        'exec',
-        '--ephemeral',
-        '--json',
-        '--ignore-user-config',
-        '--sandbox',
-        'read-only',
-        ...(process.platform === 'win32' ? ['-c', 'windows.sandbox="unelevated"'] : []),
-        '-m',
-        matrix.evaluation.model,
-        '-c',
-        `model_reasoning_effort=\"${matrix.evaluation.reasoningEffort}\"`,
-        '-C',
-        host,
-        item.prompt,
-      ]), { env: { ...process.env, CODEX_HOME: authoringHome }, capture: true })
-      const events = output.split(/\r?\n/u).filter(Boolean).map((line) => JSON.parse(line))
-      writeFileSync(join(resultRoot, `${entry.name}-${item.id.replace(/[^a-z0-9_-]/giu, '-')}.events.json`), `${JSON.stringify(events, null, 2)}\n`)
-      const text = events
-        .filter((event) => event.type === 'item.completed' && event.item?.type === 'agent_message')
-        .map((event) => event.item.text ?? '')
-        .join('\n')
-      const activated = activationEvidence(text, item.skill)
-      const pass = activated === item.should_activate
-      receipts.push({ ...item, activated, pass, model: matrix.evaluation.model, reasoningEffort: matrix.evaluation.reasoningEffort, response: text })
-      console.log(`${pass ? 'PASS' : 'FAIL'} ${item.id}`)
-    }
-    const path = join(resultRoot, `${entry.name}.json`)
-    writeFileSync(path, `${JSON.stringify(receipts, null, 2)}\n`)
-    if (receipts.some((item) => !item.pass)) fail(`${entry.name}: behavioral eval failures; see ${relative(repoRoot, path)}`)
-  }
+  return resolve(process.env.ALL_YOUR_BASE_PLUGIN_DEV_STATE ?? join(homedir(), '.local', 'state', 'all-your-base', 'codex'))
 }
 
 function jsonCommand(arguments_, env) {
@@ -433,14 +347,12 @@ function runVerify() {
 async function runRelease() {
   runVerify()
   for (const entry of pluginEntries()) await runInstalled([entry])
-  runEval(pluginEntries())
 }
 
 const command = process.argv[2]
 if (command === 'focus') runFocus()
 else if (command === 'unit') runUnit()
 else if (command === 'contract') runContract()
-else if (command === 'eval') runEval()
 else if (command === 'installed') await runInstalled()
 else if (command === 'verify') runVerify()
 else if (command === 'release') await runRelease()

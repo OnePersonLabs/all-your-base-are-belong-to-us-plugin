@@ -1,8 +1,8 @@
-# OPL Borg
+# All Your Base Are Belong To Us
 
 Assimilate technological distinctiveness into tools that belong to you.
 
-OPL Borg provides `$assimilate`, a Codex skill for investigating donor systems,
+All Your Base Are Belong To Us provides `$assimilate`, a Codex skill for investigating donor systems,
 recovering the mechanisms that make them useful, and integrating those
 capabilities into your own architecture. Use it with repositories, plugins,
 skills, or other inspectable systems. Your request determines whether the work
@@ -33,6 +33,6 @@ Read the [skill](skills/assimilate/SKILL.md),
 and [orchestration protocol](skills/assimilate/references/orchestration.md)
 for the full workflow. Campaign records preserve working evidence.
 
-Source and installation: [OnePersonLabs/opl-borg](https://github.com/OnePersonLabs/opl-borg).
+Source and installation: [OnePersonLabs/all-your-base-are-belong-to-us-plugin](https://github.com/OnePersonLabs/all-your-base-are-belong-to-us-plugin).
 
 MIT. See LICENSE.

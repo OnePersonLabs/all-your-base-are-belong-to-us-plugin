@@ -87,7 +87,7 @@ A baton pass transfers a recoverable work state, not a story about the session.
    authorized endpoint, workspace/state identity, accepted decisions, incomplete
    work and live owners, exact checks and results, and the next executable action.
 3. Include a short restart prompt, for example:
-   `Use $assimilate to resume <absolute STATE.md path>. Read the linked handoff,
+   `Use $all-your-base:assimilate to resume <absolute STATE.md path>. Read the linked handoff,
    reconcile current files and live owners, then execute <next work ID>.`
 4. Exercise a cold read when practical: a fresh agent gets only the restart prompt
    and referenced workspace. Ask it to recover the next action and missing facts

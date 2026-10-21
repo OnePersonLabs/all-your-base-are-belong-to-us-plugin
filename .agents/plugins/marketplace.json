@@ -1,14 +1,14 @@
 {
-  "name": "opl-borg",
+  "name": "all-your-base",
   "interface": {
-    "displayName": "OPL Borg"
+    "displayName": "All Your Base Are Belong To Us"
   },
   "plugins": [
     {
-      "name": "opl-borg",
+      "name": "all-your-base",
       "source": {
         "source": "local",
-        "path": "./plugins/opl-borg"
+        "path": "./plugins/all-your-base"
       },
       "policy": {
         "installation": "AVAILABLE",

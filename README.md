@@ -67,8 +67,37 @@ Use $all-your-base:assimilate to extract the useful capabilities from these dono
 repositories and integrate them into my system. Choose boundaries that fit.
 ```
 
-The skill investigates causal value, resolves conflicts, designs native
-boundaries, migrates callers, and verifies that the capabilities survived.
+## Try a contained assimilation
+
+Start in the receiving project's directory with one capability and a clear
+endpoint. For example, after installing the plugin, ask:
+
+```text
+Use $all-your-base:assimilate to inspect https://github.com/SupportPages-io/wtfm
+for ideas that would improve this project's user documentation. This project
+is the recipient. End with a design recommendation: explain what to adopt,
+what to leave behind, and how we would check that the useful part survived.
+Do not install the donor or change files. Avoid recurring model work.
+```
+
+In Claude Code, use `/all-your-base:assimilate` with the same request.
+
+Here the donor is WTFM, the recipient is your current project, and the endpoint
+is design. Expect a source-grounded recommendation, including a recommendation
+to adopt nothing if the cost exceeds the value. The agent should distinguish
+examined source from unverified claims and explain the proposed checks.
+
+When you want implementation, request it explicitly with its boundaries. The
+agent then gives selected capabilities a native owner, updates their real callers,
+and checks the connected result. Installation, publication, and deletion still
+follow your stated permissions and the receiving project's rules.
+
+A contained request needs no campaign directory. If the donor cannot run, source
+inspection can support a recommendation but cannot establish runtime success.
+If a capability cannot be preserved, expect the gap and its consequence rather
+than a claim that copying files completed assimilation.
+
+## Continue a larger campaign
 
 For large jobs, the skill maintains a campaign directory with source coverage,
 evidence, decisions, work ownership, verification receipts, and a landing file.
